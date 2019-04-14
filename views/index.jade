@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+  h2 Welcome to #{title}
+  input(type="text",id="room")
+  input(type="button",value="ルームに移動",onClick="roomJump()")
+  script(type='text/javascript').
+    function roomJump(){
+      var room_id = document.getElementById("room").value;
+      var href = "/controller/"+room_id+"/#{name}";
+      location.href = href;
+    }

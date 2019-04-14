@@ -1,0 +1,131 @@
+html
+  head
+    meta(charset='UTF-8')
+    title niconico-Controller
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js')
+    script(type='text/javascript', src='/public/javascripts/niconico.js')
+    script(type='text/javascript', src='/public/javascripts/jquery.qrcode.js')
+    script(type='text/javascript', src='/public/javascripts/qrcode.js')
+    script.
+      document.addEventListener('DOMContentLoaded', function() {
+        FastClick.attach(document.body);
+        }, false);
+      function handleSubmit (form) {
+        const action = $(form).attr('action')
+        const params = $(form).serialize()
+        const url = `${action}/#{room}/#{name}/?${params}`
+        console.log(url)
+        $.get(url)
+        .fail(function () {
+        alert('failed to send message.')
+        });
+      }
+      function like (type) {
+        const url = `/nico/like/#{room}/#{name}/?image=${type}`
+        console.log(url)
+        $.get(url)
+          .fail(function () {
+            alert('failed to like.')
+        })
+      }
+    style.
+      body {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -ms-user-select: none;
+      }
+      .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background-color: rgba(0,0,0,0.05);
+      }
+  body
+    .container
+      p !{msg}
+    .container
+      form.form-horizontal(style='margin: 16px', role='form', action='/nico/like', method='get', onsubmit='handleSubmit(this); return false;')
+        .form-group
+          label.control-label.col-sm-2 スタンプ
+          .input-group
+            button.btn.btn-default(type='button', onclick="like('Good')")
+              i.fa.fa-thumbs-o-up いいね！
+            　　
+            button.btn.btn-default(type='button', onclick="like('Bad')")
+              i.fa.fa-thumbs-o-down ぶーぶー！
+            br
+            br
+            button.btn.btn-default(type='button', onclick="like('Warai')")
+              i.fa.fa-smile-o(aria-hidden='true') 笑
+            　　
+            button.btn.btn-default(type='button', onclick="like('Kansha')")
+              感謝
+            　　
+            button.btn.btn-default(type='button', onclick="like('Kandou')")
+              感動
+
+            br
+            br
+            button.btn.btn-default(type='button', onclick="like('Setsubun')")
+              i.fa.fa-fast-forward 巻きで！
+            　　
+            button.btn.btn-default(type='button', onclick="like('Question')")
+              i.fa.fa-question-circle わからん？
+      form.form-horizontal(style='margin: 16px', role='form', action='/nico/comment', method='get', onsubmit="if (this.body.value == '') return false; handleSubmit(this); this.body.value = ''; return false;")
+        .form-group
+          label.control-label.col-sm-2 コメント
+          .input-group
+            input.form-control(type='text', name='body', maxlength='60', placeholder='Please input your comment')
+            span.input-group-btn
+              button.btn.btn-default(type='submit')
+                i.fa.fa-comment
+        .form-group
+          label.control-label.col-sm-2 スピード変更
+          .input-group.btn-group(data-toggle='buttons')
+            label.btn.btn-default
+              input.needsclick(type='radio', name='duration', value='4000')
+              |Slow
+            label.btn.btn-default.active
+              input.needsclick(type='radio', name='duration', value='2500', selected='')
+              |Medium
+            label.btn.btn-default
+              input.needsclick(type='radio', name='duration', value='1500')
+              |Fast
+        .form-group
+          label.control-label.col-sm-2 色変更
+          .input-group.btn-group(data-toggle='buttons')
+            label.btn.btn-default.active
+              input.needsclick(type='radio', name='color', value='black', selected='')
+              |Black
+            label.btn.btn-default
+              input.needsclick(type='radio', name='color', value='red')
+              |Red
+            label.btn.btn-default
+              input.needsclick(type='radio', name='color', value='blue')
+              |Blue
+            label.btn.btn-default
+              input.needsclick(type='radio', name='color', value='green')
+              |Green
+        .form-group
+          label.control-label.col-sm-2 QRcode
+          #qrcode
+        script.
+          jQuery('#qrcode').qrcode({
+            width: 128, height: 128,
+            text	: location.href //表示ページのURLを取得する
+          });
+    script.
+      var socket = io.connect();
+    .container.text-right
+      p: a(href="/"): span TOPページに戻る
+      p: a(href="/display/#{room}/#{name}",target = "_blank"): span Displayページを表示
+      br
+      NicoNico-Glass © 2017-2019 @Ammonite
