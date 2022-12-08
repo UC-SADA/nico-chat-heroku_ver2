@@ -14,7 +14,7 @@
     "console-stamp": "^0.2.9",
     "cookie-parser": "^1.4.4",
     "date-utils": "^1.2.21",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.16.2",
     "jade": "^1.11.0",
     "merge": "^1.2.1",
